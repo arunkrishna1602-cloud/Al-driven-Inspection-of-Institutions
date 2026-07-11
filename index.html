@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI School Inspection Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .school-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .category-section {
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+        }
+
+        .category-header:hover {
+            background: #34495e;
+        }
+
+        .category-icon {
+            font-size: 18px;
+        }
+
+        .category-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        .item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .rating-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+
+        .rating-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .rating-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 12px;
+            font-family: inherit;
+            min-height: 50px;
+            resize: vertical;
+        }
+
+        .summary {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .score-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .status-good {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-fair {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-poor {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #ecf0f1;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-primary {
+                grid-column: span 1;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 School Inspection Form</h1>
+            <p>AI-Powered Comprehensive School Assessment</p>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- School Info Section -->
+        <div class="school-info">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>School Name *</label>
+                    <input type="text" id="schoolName" placeholder="Enter school name" required>
+                </div>
+                <div class="form-group">
+                    <label>Inspection Date *</label>
+                    <input type="date" id="inspectionDate" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Inspector Name</label>
+                    <input type="text" id="inspector" placeholder="Inspector name">
+                </div>
+                <div class="form-group">
+                    <label>District/Region</label>
+                    <input type="text" id="district" placeholder="District or Region">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inspection Categories -->
+        <div id="categoriesContainer"></div>
+
+        <!-- Summary Section -->
+        <div class="summary" id="summarySection" style="display: none;">
+            <h2>📊 Inspection Summary</h2>
+            <div class="score-display" id="scoreDisplay">0%</div>
+            <div id="statusDisplay"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="categoryScores" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="buttons">
+            <button class="btn-secondary" onclick="resetForm()">🔄 Reset</button>
+            <button class="btn-primary" onclick="generateReport()">📊 Generate Report</button>
+            <button class="btn-success" onclick="downloadPDF()">📥 Download PDF</button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('inspectionDate').valueAsDate = new Date();
+
+        const categories = [
+            {
+                name: 'Infrastructure & Facilities',
+                icon: '🏢',
+                items: [
+                    'Building structure & maintenance',
+                    'Classrooms conditions',
+                    'Laboratory facilities',
+                    'Library & reading room',
+                    'Sports facilities',
+                    'Parking & transport'
+                ]
+            },
+            {
+                name: 'Cleanliness & Hygiene',
+                icon: '🧹',
+                items: [
+                    'Classroom cleanliness',
+                    'Restroom facilities',
+                    'Drinking water quality',
+                    'Waste management',
+                    'Pest control',
+                    'Kitchen hygiene'
+                ]
+            },
+            {
+                name: 'Safety & Security',
+                icon: '🛡️',
+                items: [
+                    'Fire safety measures',
+                    'Emergency exits',
+                    'First aid facilities',
+                    'Security personnel',
+                    'CCTV coverage',
+                    'Safe playground'
+                ]
+            },
+            {
+                name: 'Academic Standards',
+                icon: '📚',
+                items: [
+                    'Curriculum quality',
+                    'Teacher qualifications',
+                    'Teaching materials',
+                    'Student performance',
+                    'Assessment methods',
+                    'Use of technology'
+                ]
+            },
+            {
+                name: 'Staff & Management',
+                icon: '👥',
+                items: [
+                    'Staff qualifications',
+                    'Counselor availability',
+                    'Professional development',
+                    'Administrative efficiency',
+                    'Staff welfare',
+                    'Management transparency'
+                ]
+            },
+            {
+                name: 'Student Welfare',
+                icon: '❤️',
+                items: [
+                    'Student health services',
+                    'Mental health support',
+                    'Anti-bullying measures',
+                    'Extracurricular activities',
+                    'Student grievance redressal',
+                    'Inclusive environment'
+                ]
+            }
+        ];
+
+        // Store ratings and notes
+        const formData = {};
+
+        function initializeForm() {
+            const container = document.getElementById('categoriesContainer');
+            
+            categories.forEach((category, catIndex) => {
+                formData[catIndex] = {};
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-section';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.onclick = () => toggleCategory(catIndex);
+                header.innerHTML = `
+                    <span><span class="category-icon">${category.icon}</span> ${category.name}</span>
+                    <span id="expand-${catIndex}">▼</span>
+                `;
+                
+                const content = document.createElement('div');
+                content.className = 'category-content';
+                content.id = `category-${catIndex}`;
+                
+                category.items.forEach((item, itemIndex) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+                    itemDiv.innerHTML = `
+                        <div class="item-name">${item}</div>
+                        <div class="rating-group">
+                            ${[1,2,3,4,5].map(rating => `
+                                <button class="rating-btn" onclick="setRating(${catIndex}, ${itemIndex}, ${rating})">
+                                    ${rating}
+                                </button>
+                            `).join('')}
+                        </div>
+                        <textarea class="notes-input" placeholder="Add notes..." 
+                            onchange="setNotes(${catIndex}, ${itemIndex}, this.value)"></textarea>
+                    `;
+                    content.appendChild(itemDiv);
+                    
+                    formData[catIndex][itemIndex] = { rating: 0, notes: '' };
+                });
+                
+                categoryDiv.appendChild(header);
+                categoryDiv.appendChild(content);
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        function toggleCategory(catIndex) {
+            const content = document.getElementById(`category-${catIndex}`);
+            const expand = document.getElementById(`expand-${catIndex}`);
+            content.classList.toggle('active');
+            expand.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+
+        function setRating(catIndex, itemIndex, rating) {
+            formData[catIndex][itemIndex].rating = rating;
+            updateButtons(catIndex, itemIndex, rating);
+            generateReport();
+        }
+
+        function setNotes(catIndex, itemIndex, notes) {
+            formData[catIndex][itemIndex].notes = notes;
+        }
+
+        function updateButtons(catIndex, itemIndex, rating) {
+            const buttons = document.querySelectorAll(
+                `#category-${catIndex} .item:nth-child(${itemIndex + 1}) .rating-btn`
+            );
+            buttons.forEach((btn, idx) => {
+                if (idx + 1 === rating) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function calculateScore() {
+            let totalRating = 0;
+            let totalItems = 0;
+            
+            Object.keys(formData).forEach(catIndex => {
+                Object.keys(formData[catIndex]).forEach(itemIndex => {
+                    const rating = formData[catIndex][itemIndex].rating;
+                    if (rating > 0) {
+                        totalRating += rating;
+                        totalItems++;
+                    }
+                });
+            });
+            
+            return totalItems > 0 ? Math.round((totalRating / (totalItems * 5)) * 100) : 0;
+        }
+
+        function getStatus(score) {
+            if (score >= 75) return { text: 'Good ✓', class: 'status-good' };
+            if (score >= 50) return { text: 'Fair ⚠', class: 'status-fair' };
+            return { text: 'Poor ✗', class: 'status-poor' };
+        }
+
+        function generateReport() {
+            const overallScore = calculateScore();
+            const status = getStatus(overallScore);
+            
+            const summarySection = document.getElementById('summarySection');
+            summarySection.style.display = 'block';
+            
+            document.getElementById('scoreDisplay').textContent = overallScore + '%';
+            document.getElementById('progressFill').style.width = overallScore + '%';
+            
+            const statusDisplay = document.getElementById('statusDisplay');
+            statusDisplay.innerHTML = `<div class="status-badge ${status.class}">${status.text}</div>`;
+            
+            const categoryScores = document.getElementById('categoryScores');
+            categoryScores.innerHTML = '<h3 style="margin-bottom: 10px;">Category Scores:</h3>';
+            
+            let categoryScoresHtml = '';
+            Object.keys(formData).forEach((catIndex, idx) => {
+                let catTotal = 0;
+                let catCount = 0;
+                Object.keys(formData[catIndex]).forEach(itemIndex => {
+                    if (formData[catIndex][itemIndex].rating > 0) {
+                        catTotal += formData[catIndex][itemIndex].rating;
+                        catCount++;
+                    }
+                });
+                
+                const catScore = catCount > 0 ? Math.round((catTotal / (catCount * 5)) * 100) : 0;
+                const catStatus = getStatus(catScore);
+                
+                categoryScoresHtml += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 5px; margin-bottom: 5px;">
+                        <span>${categories[idx].name}</span>
+                        <strong style="color: ${catStatus.class === 'status-good' ? '#27ae60' : catStatus.class === 'status-fair' ? '#f39c12' : '#e74c3c'}">${catScore}%</strong>
+                    </div>
+                `;
+            });
+            
+            categoryScores.innerHTML += categoryScoresHtml;
+        }
+
+        function resetForm() {
+            if (confirm('Are you sure? This will clear all data.')) {
+                Object.keys(formData).forEach(catIndex => {
+                    Object.keys(formData[catIndex]).forEach(itemIndex => {
+                        formData[catIndex][itemIndex] = { rating: 0, notes: '' };
+                        updateButtons(catIndex, itemIndex, 0);
+                    });
+                });
+                
+                document.querySelectorAll('.notes-input').forEach(textarea => {
+                    textarea.value = '';
+                });
+                
+                document.getElementById('summarySection').style.display = 'none';
+                showAlert('Form reset successfully!', 'success');
+            }
+        }
+
+        async function downloadPDF() {
+            const schoolName = document.getElementById('schoolName').value;
+            const inspectionDate = document.getElementById('inspectionDate').value;
+            
+            if (!schoolName || !inspectionDate) {
+                showAlert('Please fill in School Name and Inspection Date', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const overallScore = calculateScore();
+                const inspectionData = {
+                    schoolName,
+                    inspectionDate,
+                    inspector: document.getElementById('inspector').value,
+                    district: document.getElementById('district').value,
+                    overallScore,
+                    results: {}
+                };
+                
+                // Prepare results
+                Object.keys(formData).forEach((catIndex, idx) => {
+                    inspectionData.results[categories[idx].name] = {};
+                    Object.keys(formData[catIndex]).forEach(itemIndex => {
+                        inspectionData.results[categories[idx].name][categories[idx].items[itemIndex]] = 
+                            formData[catIndex][itemIndex];
+                    });
+                });
+                
+                const response = await fetch('/api/download-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inspectionData)
+                });
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `School_Inspection_${Date.now()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showAlert('PDF downloaded successfully!', 'success');
+            } catch (error) {
+                showAlert('Error downloading PDF: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alert');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert ${type}`;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Initialize form on load
+        window.onload = initializeForm;
+    </script>
+</body>
+</html>
