@@ -1,4 +1,6 @@
-# 🏫 AI School Inspection Form
+# ARUNKRISHN.B- DEVELOPER PORTFOLIO
+A modern, responsive, dark-themed developer portfolio website built for **B. Arun Krishna**, a **B.Tech Computer Science and Business Systems (CSBS) student at VSB Engineering College, Karur**. The portfolio showcases his technical skills, projects, education, achievements, and experience in software development and emerging technologies.
+
 
 A simple, easy-to-use web application for conducting comprehensive school inspections using Python Flask and HTML.
 
